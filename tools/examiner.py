@@ -40,6 +40,8 @@ def words(text):
     text = re.sub(r'(עמוד)\s+([אב])[\'"״׳]?(?=[\s.,]|$)', lambda m: m.group(1) + ' ' + LN[m.group(2)], text)
     text = re.sub(r'\d+', lambda m: ' ' + NUM.get(m.group(), m.group()) + ' ', text)
     text = text.replace('־', ' ').replace('-', ' ')
+    # שמות אותיות שהמתמללים כותבים כאות בודדת ("מ, י, מ")
+    text = re.sub(r'(?<![\u05D0-\u05EA\u0591-\u05C7])([מי])(?![\u05D0-\u05EA\u0591-\u05C7])', lambda m: {'מ': 'מם', 'י': 'יוד'}[m.group(1)], text)
     ws = []
     for w in text.split():
         if re.search(r'[A-Za-z]', w): ws.append(('#junk', ['#'])); continue

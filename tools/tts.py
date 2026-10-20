@@ -57,18 +57,23 @@ def tts_gemara(nq):
 def expect_gemara(nq):
     t = nq.replace('״', '').replace('׳', '').replace('מַתְנִי', 'מַתְנִיתִין').replace('גְּמָ ', 'גְּמָרָא ')
     return re.sub(r'\s*–\s*', ', ', t)
+# ההגייה הצפויה בלבד (לבוחן; לא משנה את מה שנשלח להקראה): שמות שנהגים בחיריק
+EXPECT_FIX = {'חסדא': 'חִסְדָּא', 'אשה': 'אִשָּׁה'}
+def expect_fix(t):
+    for a, b in EXPECT_FIX.items(): t = re.sub(r'(?<![\u05D0-\u05EA])' + a + r'(?![\u05D0-\u05EA])', b, t)
+    return t
 def plan():
     d = json.load(open(os.path.join(ROOT, 'data/bm76.json'), encoding='utf-8'))
     jobs = []   # (id, kind, tts_text, expected_text)
     for u in d['units']:
         for l in u['lines']:
             jobs.append(('%s:%d:g' % (u['id'], l['n']), 'gemara', tts_gemara(l['niqqud']), expect_gemara(l['niqqud'])))
-            e = tts_expl(l['pshat']); jobs.append(('%s:%d:e' % (u['id'], l['n']), 'expl', e, e))
+            e = tts_expl(l['pshat']); jobs.append(('%s:%d:e' % (u['id'], l['n']), 'expl', e, expect_fix(e)))
     if os.environ.get('WITH_TAANIT', '1') == '1':
         t = json.load(open(os.path.join(ROOT, 'data/taanit.json'), encoding='utf-8'))
         for a in t['amudim']:
             for i, s in enumerate(a['summary'], 1):
-                e = tts_expl(s['t'], True); jobs.append(('t:%s:%d' % (a['id'], i), 'taanit', e, e))
+                e = tts_expl(s['t'], True); jobs.append(('t:%s:%d' % (a['id'], i), 'taanit', e, expect_fix(e)))
     return jobs
 # ---------- API ----------
 def K(): return os.environ.get('ELEVENLABS_API_KEY', '')
