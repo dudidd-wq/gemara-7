@@ -92,6 +92,11 @@ ok('unit "done" persists after reload', await p.evaluate(() => !!JSON.parse(loca
     await btn.tap(); ok('second tap stops playback', !(await p.locator('.play.on').count()));
   }
 }
+{ await go('iyun/u/u6'); const hs = await p.evaluate(() => [...document.querySelectorAll('.gtext .w')].map(e => { const r = e.getBoundingClientRect(); return Math.min(r.width, r.height); }));
+  ok(`inline glossary words ≥24px (WCAG 2.5.8): ${hs.length} words`, hs.every(x => x >= 24), 'min ' + Math.round(Math.min(...hs))); }
+{ await go('beki/a/2a'); const b = p.locator('button', { hasText: 'השמעת הסיכום' }); await b.tap(); await p.waitForTimeout(1500);
+  const st = await p.evaluate(() => ({ pr: document.querySelector('[aria-pressed=true]')?.textContent || '', hl: !!document.querySelector('li.playing') }));
+  ok('Taanit summary audio plays and highlights current point', st.pr.includes('השמעת') && st.hl); await b.tap(); }
 // u8 טבלה
 await go('iyun/u/u8'); ok('u8 shows ת"ק / רבי דוסא table', (await p.locator('table').innerText()).includes('רבי דוסא'));
 // זרימה
