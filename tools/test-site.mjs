@@ -84,7 +84,7 @@ ok('unit "done" persists after reload', await p.evaluate(() => !!JSON.parse(loca
 {
   const n = Object.keys(audio).filter(k => k.startsWith('u')).length;
   if (n) {
-    const u = bm.units.find(u => u.lines.some(l => audio[u.id + ':' + l.n + ':g'])); await go('iyun/u/' + u.id);
+    const u = bm.units.find(u => u.lines.some(l => audio[u.id + ':' + l.n + ':g'] || audio[u.id + ':' + l.n + ':e'])); await go('iyun/u/' + u.id);
     const btn = p.locator('.gline .play').first(); await btn.tap(); await p.waitForTimeout(1500);
     const st = await p.evaluate(() => { const a = [...document.querySelectorAll('audio')]; return document.querySelector('.play.on') ? 'on' : 'off'; });
     ok('line audio button starts playback (button pressed state)', st === 'on');

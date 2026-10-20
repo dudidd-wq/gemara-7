@@ -92,7 +92,7 @@ var IY = (function () {
         h('div', { class: 'lhead' }, h('span', { class: 'role ' + l.role }, l.role), h('span', null, 'שורה ' + l.n + ' · ' + l.segs.join(', '))),
         h('div', { class: 'gtext', lang: 'he' }, lineText(l)));
       var tools = h('div', { class: 'ltools' });
-      if (g || e) tools.appendChild(U.playBtn(function () { return [g, e].filter(Boolean); }, 'השמעת השורה וההסבר'));
+      if (g || e) tools.appendChild(U.playBtn(function () { return [g, e].filter(Boolean); }, g ? 'השמעת השורה וההסבר' : 'השמעת ההסבר'));
       if (!showP) tools.appendChild(toggle('פשט', function () { return l.pshat; }));
       if (l.rashi.length) tools.appendChild(toggle('רש"י', function () { return comm(l.rashi); }, 'rashi'));
       if (l.tosafot.length) tools.appendChild(toggle('תוספות', function () { return comm(l.tosafot); }, 'tos'));
