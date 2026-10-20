@@ -110,3 +110,4 @@ fieldset{border:1px solid var(--line);border-radius:12px;margin:0 0 10px;padding
 .rad label{display:flex;align-items:center;gap:8px;min-height:48px;cursor:pointer}.rad input{width:22px;height:22px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 @media print{.topbar,.tabbar,.ltools,.btnrow{display:none}body{padding:0}}
+.card li.playing{background:#fff8e6;border-radius:6px}

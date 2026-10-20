@@ -30,12 +30,13 @@ var BK = (function () {
   }
   function amud(app, id) {
     var k = find(id); if (k < 0) { app.appendChild(h('p', null, 'העמוד לא נמצא.')); return; }
-    var a = T.amudim[k], s = status(a), c = AUD['t:' + a.id];
+    var a = T.amudim[k], s = status(a);
+    var clips = a.summary.map(function (x, i) { var f = AUD['t:' + a.id + ':' + (i + 1)]; return f ? { file: 'audio/' + f, onstart: function () { document.querySelectorAll('.playing').forEach(function (y) { y.classList.remove('playing'); }); var el = document.getElementById('S' + (i + 1)); if (el) el.classList.add('playing'); } } : null; }).filter(Boolean);
     app.appendChild(h('div', { class: 'small muted' }, 'מסכת תענית · עמוד ' + (k + 1) + ' מתוך ' + T.amudim.length));
     app.appendChild(h('h2', null, a.daf + ' – ' + a.title));
     app.appendChild(h('div', { class: 'card' }, h('h3', null, 'נושאים'), h('div', { class: 'chips' }, a.topics.map(function (t) { return h('span', { class: 'chip' }, t); })),
-      c ? h('div', { class: 'btnrow' }, (function () { var b = h('button', { class: 'btn sec', type: 'button', 'aria-pressed': 'false' }, '🔊 סיכום קולי'); b.addEventListener('click', function () { U.play([{ file: 'audio/' + c }], b); }); return b; })()) : null));
-    app.appendChild(h('div', { class: 'card' }, h('h3', null, 'סיכום'), h('ol', null, a.summary.map(function (x) { return h('li', { style: 'margin-bottom:6px' }, x.t, ' ', h('span', { class: 'ref' }, '(' + x.ref + ')')); }))));
+      clips.length ? h('div', { class: 'btnrow' }, (function () { var b = h('button', { class: 'btn sec', type: 'button', 'aria-pressed': 'false' }, '🔊 השמעת הסיכום' + (clips.length < a.summary.length ? ' (' + clips.length + ' מתוך ' + a.summary.length + ' סעיפים)' : '')); b.addEventListener('click', function () { U.play(clips, b); }); return b; })()) : null));
+    app.appendChild(h('div', { class: 'card' }, h('h3', null, 'סיכום'), h('ol', null, a.summary.map(function (x, i) { return h('li', { id: 'S' + (i + 1), style: 'margin-bottom:6px' }, x.t, ' ', h('span', { class: 'ref' }, '(' + x.ref + ')')); }))));
     app.appendChild(h('div', { class: 'card' }, h('h3', null, 'מי אמר מה'),
       h('table', null, h('thead', null, h('tr', null, h('th', { scope: 'col' }, 'מי'), h('th', { scope: 'col' }, 'מה אמר'))),
         h('tbody', null, a.who.map(function (w) { return h('tr', null, h('td', { class: 'who' }, w.who), h('td', null, w.said, ' ', h('span', { class: 'ref' }, '(' + w.ref + ')'))); })))));
