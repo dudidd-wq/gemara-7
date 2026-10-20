@@ -111,3 +111,6 @@ fieldset{border:1px solid var(--line);border-radius:12px;margin:0 0 10px;padding
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 @media print{.topbar,.tabbar,.ltools,.btnrow{display:none}body{padding:0}}
 .card li.playing{background:#fff8e6;border-radius:6px}
+summary{list-style:none}summary::-webkit-details-marker{display:none}
+summary::before{content:"◂";display:inline-block;margin-left:8px;transition:transform .15s}
+details[open]>summary::before{transform:rotate(-90deg)}
