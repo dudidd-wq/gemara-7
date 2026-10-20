@@ -1,6 +1,6 @@
 /* Service worker: עבודה בלי אינטרנט. נוצר על ידי tools/build-sw.py – VERSION משתנה בכל שינוי תוכן. */
 'use strict';
-var VERSION = 'g7-04e0600a1f';
+var VERSION = 'g7-738e9128fc';
 // קריינות: לא בהתקנה – נשמרת במטמון נפרד בפעם הראשונה שמשמיעים קטע
 var AUDIO = 'g7-audio-v1';
 var FILES = [
