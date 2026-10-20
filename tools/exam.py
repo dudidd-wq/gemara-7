@@ -132,5 +132,25 @@ def loop(only):
     with ThreadPoolExecutor(3) as pool:
         for cid, sc, log, st in pool.map(one, jobs): print(cid, sc, log, 'spent', T.spent(), flush=True)
     save(res); summary(res, T.sel(T.plan(), only))
+def rescore(only):
+    """מחשב מחדש ציונים מהתמלולים השמורים (בלי עלות). תמלול ריק – מתמללים שוב."""
+    res = load(); plan = {j[0]: j for j in T.plan()}
+    for c, e in res.items():
+        if only and not any(c.startswith(o) for o in only): continue
+        e['expected'] = plan[c][3]
+        for k, t in list(e['takes'].items()):
+            tr = t['transcripts']
+            if not all((tr.get(j) or '').strip() for j in JUDGES):
+                for j in JUDGES:
+                    if not (tr.get(j) or '').strip():
+                        for suf in ('.ivrit.json', '.scribe_v2.json'):
+                            f = f'{T.D}/{k}.mp3' + suf
+                            if os.path.exists(f) and not (json.load(open(f)).get('text') or '').strip(): os.remove(f)
+                tr = transcripts(k)
+            r = X.examine(e['expected'], tr, f'{T.D}/{k}.mp3'); r['key'] = k
+            for f in ('text', 'tag', 'strategy', 'vs'):
+                if f in t: r[f] = t[f]
+            e['takes'][k] = r
+    save(res); summary(res, T.sel(T.plan(), only))
 if __name__ == '__main__':
-    {'score': score, 'loop': loop}[sys.argv[1]](sys.argv[2:])
+    {'score': score, 'loop': loop, 'rescore': rescore}[sys.argv[1]](sys.argv[2:])
